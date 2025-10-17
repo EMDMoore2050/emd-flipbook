@@ -1,56 +1,57 @@
 <!-- /index.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta http-equiv="content-type" content="text/html;charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, height=device-height, minimal-ui">
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, height=device-height, minimal-ui"
+    />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="description" content="EMD Product Catalog 2025–2026"/>
+
+    <!-- Why: keep share cards/image previews working without leaking stray "b''" text -->
+    <meta name="description" content="EMD Product Catalog 2025–2026" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="EMD Product Catalog 2025–2026" />
     <meta property="og:image" content="img/page1.jpg" />
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
     <meta property="og:image:width" content="108" />
     <meta property="og:image:height" content="140" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
     <title>EMD_ProductCatalog_2025-2026_UPDATED</title>
 
-    <!-- CSS (fixed paths) -->
+    <!-- Why: correct paths; previous 404s prevented init -->
     <link rel="stylesheet" href="css/reset.css" />
     <link rel="stylesheet" href="css/legacy.css" />
     <link rel="stylesheet" href="css/flipbook.css" />
 
-    <!-- JS (fixed paths) -->
-    <script src="js/jquery-3.5.1.min.js"></script>
-    <script src="js/flipbook.js"></script>
-    <!-- NOTE: this file is at the repo root, not in /js or /inc -->
-    <script src="main.init.js"></script>
-
-    <script>
-      // Only to help catch misconfig in production; safe to keep.
-      (function () {
-        function fail(msg) { console.error("[flipbook]", msg); }
-
-        // Why: makes it obvious in console if something still fails to load.
-        $(function () {
-          if (typeof window.initFlipbook !== "function") return fail("initFlipbook() not loaded (check js/flipbook.js path).");
-          if (!window.flipbookSettings || !window.flipbookSettings.settings) return fail("flipbookSettings not loaded (check main.init.js).");
-
-          window.initFlipbook($.extend(window.flipbookSettings.settings, {
-            // place overrides here if needed
-          }));
-        });
-      })();
-    </script>
+    <!-- Optional: tiny baseline so the ControlBar is visible while styling loads -->
+    <style>
+      .ControlBar {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 8px;
+        display: flex;
+        justify-content: center;
+        pointer-events: auto;
+      }
+      .ControlBar-content { display: flex; gap: 16px; align-items: center; }
+      .ControlBar-button { cursor: pointer; }
+    </style>
   </head>
+
   <body scroll="no">
+    <!-- Why: flipbook.js renders into this node -->
     <div id="pageflip"></div>
 
-    <!-- Removed stray "b''" -->
+    <!-- Why: some themes use this for page overlay; keep empty to avoid stray text -->
     <div class="content-page"></div>
 
-    <!-- Fixed content pages list to /pages -->
-    <div class="content-pages">
+    <!-- Why: the engine reads these anchors to know which HTML pages to load -->
+    <div class="content-pages" aria-hidden="true">
       <a href="pages/1.html"></a><a href="pages/2.html"></a><a href="pages/3.html"></a><a href="pages/4.html"></a>
       <a href="pages/5.html"></a><a href="pages/6.html"></a><a href="pages/7.html"></a><a href="pages/8.html"></a>
       <a href="pages/9.html"></a><a href="pages/10.html"></a><a href="pages/11.html"></a><a href="pages/12.html"></a>
@@ -61,7 +62,45 @@
       <a href="pages/29.html"></a><a href="pages/30.html"></a>
     </div>
 
-    <!-- Templates unchanged (kept as in your repo) -->
+    <!-- =========================
+         Templates expected by flipbook.js
+         ========================= -->
+
+    <!-- Why: THIS is what fixed your crash; class names must match the JS -->
+    <script id="Template-controlBar" type="text/template">
+      <div class="ControlBar">
+        <div class="ControlBar-content">
+
+          <div class="ControlBar-pageNavBar">
+            <button class="pageFirst ControlBar-button"  title="First Page" aria-label="First Page">⏮</button>
+            <button class="pagePrev  ControlBar-button"  title="Previous Page" aria-label="Previous Page">◀</button>
+
+            <span class="pageCurrent" aria-label="Current page">1</span>
+            <span>/</span>
+            <span class="pageCount" aria-label="Total pages">0</span>
+
+            <button class="pageNext  ControlBar-button"  title="Next Page" aria-label="Next Page">▶</button>
+            <button class="pageLast  ControlBar-button"  title="Last Page" aria-label="Last Page">⏭</button>
+          </div>
+
+          <div class="ControlBar-zoomBar">
+            <button class="zoomOut ControlBar-button" title="Zoom Out" aria-label="Zoom Out">−</button>
+            <button class="zoomIn  ControlBar-button" title="Zoom In"  aria-label="Zoom In">+</button>
+          </div>
+
+          <div class="ControlBar-tools">
+            <button class="searchBtn   ControlBar-button" title="Search"      aria-label="Search">🔎</button>
+            <button class="thumbsBtn   ControlBar-button" title="Thumbnails"  aria-label="Thumbnails">🗂</button>
+            <button class="fullscreen  ControlBar-button" title="Fullscreen"  aria-label="Fullscreen">⛶</button>
+            <button class="printBtn    ControlBar-button" title="Print"       aria-label="Print">🖨</button>
+            <button class="downloadBtn ControlBar-button" title="Download"    aria-label="Download">⬇</button>
+          </div>
+
+        </div>
+      </div>
+    </script>
+
+    <!-- Kept minimal: common templates many builds expect. Safe to leave as-is. -->
     <script id="Template-searchResult" type="text/template">
       <div class="SearchResult">
         <div class="SearchResult-thumbnail"></div>
@@ -69,8 +108,75 @@
       </div>
     </script>
 
-    <!-- … keep all your other template <script> blocks exactly as you already have them … -->
-    <!-- (ControlBar, searchScreen, navigationButtons, legacy, etc.) -->
+    <script id="Template-searchScreen" type="text/template">
+      <div class="SearchScreen">
+        <div class="SearchScreen-header">
+          <input class="SearchScreen-input" type="search" placeholder="Search…" />
+          <button class="SearchScreen-close" aria-label="Close">✕</button>
+        </div>
+        <div class="SearchScreen-results"></div>
+      </div>
+    </script>
 
+    <script id="Template-navigationButtons" type="text/template">
+      <div class="navigationButtons">
+        <button class="navigation-previous" aria-label="Previous">◀</button>
+        <button class="navigation-next" aria-label="Next">▶</button>
+      </div>
+    </script>
+
+    <script id="Template-legacy" type="text/template">
+      <div class="LegacyMessage">
+        <p>Your browser may not support all features. A simplified view is shown.</p>
+      </div>
+    </script>
+
+    <!-- =========================
+         JS: correct file paths
+         ========================= -->
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script src="js/flipbook.js"></script>
+    <!-- Note: lives at repo root -->
+    <script src="main.init.js"></script>
+
+    <!-- =========================
+         Boot guards: fail loud, not blank
+         ========================= -->
+    <script>
+      // Why: surface missing assets/settings instead of silent errors
+      $(function () {
+        if (typeof window.jQuery !== "function") {
+          console.error("jQuery failed to load. Check js/jquery-3.5.1.min.js path.");
+          return;
+        }
+        if (typeof window.initFlipbook !== "function") {
+          console.error("flipbook core missing. Check js/flipbook.js path.");
+          return;
+        }
+        if (!window.flipbookSettings || !window.flipbookSettings.settings) {
+          console.error("flipbookSettings missing. Check main.init.js exports.");
+          return;
+        }
+        if (!document.querySelectorAll(".content-pages a").length) {
+          console.error("No page links found in .content-pages. Add pages/1.html, etc.");
+          return;
+        }
+
+        // Why: ensure ControlBar hooks exist; prevents the old `.css` crash
+        const needed = [
+          ".ControlBar", ".pageCurrent", ".pageCount",
+          ".pagePrev", ".pageNext", ".zoomIn", ".zoomOut", ".searchBtn"
+        ];
+        const missing = needed.filter(sel => !document.querySelector(sel));
+        if (missing.length) {
+          console.error("Missing ControlBar hooks:", missing.join(", "),
+                        "→ update Template-controlBar.");
+          return;
+        }
+
+        // Start the flipbook
+        window.initFlipbook(window.flipbookSettings.settings);
+      });
+    </script>
   </body>
 </html>
